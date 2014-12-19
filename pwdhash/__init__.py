@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import re
 import sys
 import hmac
@@ -66,7 +64,18 @@ class PwdHashGenerator (object):
         Returns a base64-encoded HMAC-MD5 for key and data, with the 
         trailing '=' stripped.-
         """
-        bdigest = hmac.HMAC(key, data).digest().encode('base64').strip()
+        import unicodedata
+
+        #
+        # the HMAC object does not support Unicode data, so we have
+        # to normalize the string before hashing it
+        #
+        norm_key = unicodedata.normalize ('NFKD', key)
+        norm_key = norm_key.encode ('ascii', 'ignore')
+
+        bdigest = hmac.HMAC (norm_key, data).digest ( )
+        bdigest = bdigest.encode ('base64').strip ( )
+
         return re.sub ('=+$', '', bdigest)
 
 
@@ -189,7 +198,7 @@ class PwdHashGenerator (object):
         pwd_hash = self._b64_hmac_md5 (passwd, realm)
         del passwd
 
-        return self._apply_constraints (pwd_hash, size, nonalpha)
+        return self._apply_constraints (pwd_hash, size, non_alpha)
 
 
 
