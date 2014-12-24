@@ -9,6 +9,15 @@ class HmacMd5 (object):
     Python's built-in HMAC-MD5 implementation only supports ASCII.-
     """
     @staticmethod
+    def _wrap_signed_int32 (integer):
+        """
+        Converts 'integer' to a valid signed 32-bit integer.-
+        """
+        if integer > 2**31:
+            integer = (0xFFFFFFFF - integer + 1) * -1
+        return integer
+
+    @staticmethod
     def _safe_add (x, y):
         """
         Add integers, wrapping at 2^32.
@@ -16,7 +25,11 @@ class HmacMd5 (object):
         """
         lsw = (x & 0xFFFF) + (y & 0xFFFF)
         msw = (x >> 16) + (y >> 16) + (lsw >> 16)
-        return (msw << 16) | (lsw & 0xFFFF)
+        #
+        # msw should be a valid 32-bit signed integer
+        #
+        msw = HmacMd5._wrap_signed_int32 (msw << 16)
+        return msw | (lsw & 0xFFFF)
 
     @staticmethod
     def _bit_rol (num, cnt):
@@ -30,14 +43,16 @@ class HmacMd5 (object):
         #
         lwr_32 = (num << cnt) & 0xFFFFFFFF
         #
-        # ret_val should be a 32-bit signed number
+        # implement Javascript's zero-filling right shift (>>>)
         #
+        if num < 0:
+            num = 0xFFFFFFFF + num + 1
         ret_val  = num >> (32 - cnt)
         ret_val |= lwr_32
-        if ret_val > 2**31:
-            max_32   = int ('0xFFFFFFFF', 16)
-            ret_val  = (max_32 - ret_val) * -1
-            ret_val -= 1
+        #
+        # ret_val should be a 32-bit signed number
+        #
+        ret_val = HmacMd5._wrap_signed_int32 (ret_val)
         return ret_val
 
     #
