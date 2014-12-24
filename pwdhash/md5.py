@@ -11,19 +11,34 @@ class HmacMd5 (object):
     @staticmethod
     def _safe_add (x, y):
         """
-        Add integers, wrapping at 2^32. 
+        Add integers, wrapping at 2^32.
         This uses 16-bit operations internally.-
         """
-        lsw = (x & 0xFFFF) + (y & 0xFFFF);
+        lsw = (x & 0xFFFF) + (y & 0xFFFF)
         msw = (x >> 16) + (y >> 16) + (lsw >> 16)
-        return (msw << 16) | (lsw & 0xFFFF);
+        return (msw << 16) | (lsw & 0xFFFF)
 
     @staticmethod
     def _bit_rol (num, cnt):
         """
-        Bitwise rotate a 32-bit number to the left.-
+        Implements the Javascript bitwise rotation of a
+        32-bit number.-
         """
-        return (num << cnt) | (num >> (32 - cnt))
+        #
+        # take only the lower 32 bits into account
+        # when left shifting
+        #
+        lwr_32 = (num << cnt) & 0xFFFFFFFF
+        #
+        # ret_val should be a 32-bit signed number
+        #
+        ret_val  = num >> (32 - cnt)
+        ret_val |= lwr_32
+        if ret_val > 2**31:
+            max_32   = int ('0xFFFFFFFF', 16)
+            ret_val  = (max_32 - ret_val) * -1
+            ret_val -= 1
+        return ret_val
 
     #
     # these functions implement the four basic operations the algorithm uses
@@ -50,14 +65,14 @@ class HmacMd5 (object):
         return HmacMd5._md5_cmn (c ^ (b | (~d)), a, b, x, s, t)
 
 
-    @staticmethod 
+    @staticmethod
     def core_md5 (lst, bit_count):
         """
-        Calculates the MD5 of list 'lst' containing little-endian words 
+        Calculates the MD5 of list 'lst' containing little-endian words
         and a bit lenght of 'bit_count'.-
         """
         #
-        # append padding 
+        # append padding
         #
         idx = bit_count >> 5
         for i in range (idx - len (lst) + 1):
@@ -69,12 +84,12 @@ class HmacMd5 (object):
             lst.append (0)
         lst[idx] = bit_count
 
-        a =  1732584193;
-        b = -271733879;
-        c = -1732584194;
-        d =  271733878;
+        a =  1732584193
+        b = -271733879
+        c = -1732584194
+        d =  271733878
 
-        for i in range (0, len(lst), 16):
+        for i in range (0, len (lst) - 1, 16):
             old_a = a
             old_b = b
             old_c = c
@@ -160,24 +175,24 @@ class HmacMd5 (object):
     def str2binl (string, chrsz):
         """
         Converts 'string' to a list of little-endian words.
-        If 'chrsz' is 8 (ASCII), characters >255 have their hi-byte 
+        If 'chrsz' is 8 (ASCII), characters >255 have their hi-byte
         silently ignored:
 
         string  the string to convert;
         chrsz   number of bits per input character.-
         """
-        bin  = [0]
+        binl  = [0]
         mask = (1 << chrsz) - 1
-        
+
         for i in range (0, len(string) * chrsz, chrsz):
             tmp = ord (string[i / chrsz]) & mask
             tmp = tmp << (i % 32)
             idx = i >> 5
-            if idx == len(bin):
-                bin.append (0)
-            bin[idx] |= tmp
+            if idx == len(binl):
+                binl.append (0)
+            binl[idx] |= tmp
 
-        return bin
+        return binl
 
 
     @staticmethod
@@ -192,7 +207,7 @@ class HmacMd5 (object):
 
         bkey = HmacMd5.str2binl (key, chrsz)
         if len(bkey) > 16:
-            bkey = HmacMd5.core_md5 (bkey, 
+            bkey = HmacMd5.core_md5 (bkey,
                                      len(key) * chrsz)
 
         ipad = [0] * 16
@@ -201,7 +216,7 @@ class HmacMd5 (object):
             ipad[i] = bkey[i] ^ 0x36363636
             opad[i] = bkey[i] ^ 0x5C5C5C5C
 
-        for i in range (len(bkey) - 1, 16):
+        for i in range (len(bkey), len(ipad)):
             ipad[i] = 0x36363636
             opad[i] = 0x5C5C5C5C
 
