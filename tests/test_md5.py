@@ -9,11 +9,72 @@ class HmacMd5Test (unittest.TestCase):
     """
     Tests the HMAC-MD5 custom implementation.-
     """
+    def test_bit_rol (self):
+        params   = [716240829, 7]
+        expected = 1484512917
+        self.assertEqual (HmacMd5._bit_rol (*params),
+                          expected)
+        params   = [137109738, 12]
+        expected = -1039228798
+        self.assertEqual (HmacMd5._bit_rol (*params),
+                          expected)
+
+    def test_md5_ff (self):
+        params = [1732584193,
+                  -271733879,
+                 -1732584194,
+                   271733878,
+                  1397117766,
+                           7,
+                  -680876936]
+        expected = 1212779038
+        self.assertEqual (HmacMd5._md5_ff (*params),
+                          expected)
+        params = [ 271733878,
+                  1212779038,
+                  -271733879,
+                 -1732584194,
+                   909522486,
+                          12,
+                  -389564586]
+        expected = 173550240
+        self.assertEqual (HmacMd5._md5_ff (*params),
+                          expected)
+
     def test_str2binl (self):
         string   = "pepe"
-        expected = [1701864816] 
-        
+        expected = [1701864816]
         self.assertEqual (HmacMd5.str2binl (string, 8),
+                          expected)
+
+    def test_core_md5 (self):
+        chrsz = 8
+        lst = [1397117766,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                909522486,
+                1735356263,
+                1663985004,
+                28015]
+        expected = [-1906562005,
+                     1347505609,
+                    -2070658591,
+                      639279188]
+        result = HmacMd5.core_md5 (lst,
+                                   512 + len(expected) * chrsz)
+        self.assertEqual (result,
                           expected)
 
 
@@ -25,7 +86,7 @@ class HmacMd5Test (unittest.TestCase):
                     81019179,
                     -227315827,
                     -927036398]
-        
+
         self.assertEqual (HmacMd5.core_hmac_md5 (key, data),
                           expected)
 
