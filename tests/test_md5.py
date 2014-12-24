@@ -9,37 +9,61 @@ class HmacMd5Test (unittest.TestCase):
     """
     Tests the HMAC-MD5 custom implementation.-
     """
+    def test_safe_add (self):
+        import ipdb; ipdb.set_trace ( )
+        params   = [[668467704, 2130783302],]
+        expected = [-1495716290]
+        for i in range (len (params)):
+            self.assertEqual (HmacMd5._safe_add (*params[i]),
+                              expected[i])
+
     def test_bit_rol (self):
-        params   = [716240829, 7]
-        expected = 1484512917
-        self.assertEqual (HmacMd5._bit_rol (*params),
-                          expected)
-        params   = [137109738, 12]
-        expected = -1039228798
-        self.assertEqual (HmacMd5._bit_rol (*params),
-                          expected)
+        params   = [  [716240829, 7],
+                     [137109738, 12],
+                    [-522252520, 17]]
+        expected = [ 1484512917,
+                    -1039228798,
+                      506577342]
+        for i in range (len (params)):
+            self.assertEqual (HmacMd5._bit_rol (*params[i]),
+                            expected[i])
+
 
     def test_md5_ff (self):
-        params = [1732584193,
-                  -271733879,
-                 -1732584194,
-                   271733878,
-                  1397117766,
-                           7,
-                  -680876936]
-        expected = 1212779038
-        self.assertEqual (HmacMd5._md5_ff (*params),
-                          expected)
-        params = [ 271733878,
-                  1212779038,
-                  -271733879,
-                 -1732584194,
-                   909522486,
-                          12,
-                  -389564586]
-        expected = 173550240
-        self.assertEqual (HmacMd5._md5_ff (*params),
-                          expected)
+        params   = [ ]
+        expected = [ ]
+
+        params.append ([ 1732584193,
+                         -271733879,
+                        -1732584194,
+                          271733878,
+                         1397117766,
+                                  7,
+                         -680876936])
+        expected.append (1212779038)
+
+        params.append ([  271733878,
+                         1212779038,
+                         -271733879,
+                        -1732584194,
+                          909522486,
+                                 12,
+                         -389564586])
+        expected.append (173550240)
+
+        params.append ([-1732584194,
+                          173550240,
+                         1212779038,
+                         -271733879,
+                          909522486,
+                                 17,
+                          606105819])
+        expected.append (680127582)
+
+        for i in range (len (params)):
+            self.assertEqual (HmacMd5._md5_ff (*params[i]),
+                              expected[i])
+
 
     def test_str2binl (self):
         string   = "pepe"
