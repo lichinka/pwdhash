@@ -15,6 +15,8 @@ class HmacMd5 (object):
         """
         if integer > 2**31:
             integer = (0xFFFFFFFF - integer + 1) * -1
+        elif integer < -2**31:
+            integer += 0xFFFFFFFF + 1
         return integer
 
     @staticmethod
