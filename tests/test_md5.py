@@ -10,9 +10,10 @@ class HmacMd5Test (unittest.TestCase):
     Tests the HMAC-MD5 custom implementation.-
     """
     def test_safe_add (self):
-        import ipdb; ipdb.set_trace ( )
-        params   = [[668467704, 2130783302],]
-        expected = [-1495716290]
+        params   = [[668467704, 2130783302],
+                    [-1526234400, -1971324652]]
+        expected = [-1495716290,
+                      797408244]
         for i in range (len (params)):
             self.assertEqual (HmacMd5._safe_add (*params[i]),
                               expected[i])
@@ -97,7 +98,7 @@ class HmacMd5Test (unittest.TestCase):
                     -2070658591,
                       639279188]
         result = HmacMd5.core_md5 (lst,
-                                   512 + len(expected) * chrsz)
+                                   512 + 10 * chrsz)
         self.assertEqual (result,
                           expected)
 
