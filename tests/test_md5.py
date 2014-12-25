@@ -104,14 +104,22 @@ class HmacMd5Test (unittest.TestCase):
 
 
     def test_core_hmac_md5 (self):
-        #key  = "^čufti^"
-        key  = "pepe"
-        data = "google.com"
-        expected = [233115305,
-                    81019179,
-                    -227315827,
-                    -927036398]
+        params   = []
+        expected = []
 
-        self.assertEqual (HmacMd5.core_hmac_md5 (key, data),
-                          expected)
+        params.append ([u"^čufti^", "google.com"])
+        expected.append ([-1150369439,
+                            320447430,
+                           2092528897,
+                          -2140662759])
+
+        params.append  (["pepe", "google.com"])
+        expected.append ([233115305,
+                           81019179,
+                         -227315827,
+                         -927036398])
+
+        for i in range (len (params)):
+            self.assertEqual (HmacMd5.core_hmac_md5 (*params[i]),
+                              expected[i])
 
