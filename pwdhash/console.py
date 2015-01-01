@@ -1,4 +1,4 @@
-import os, subprocess
+import os, sys, subprocess
 
 
 
@@ -29,8 +29,8 @@ def console_main (pwd_gen):
 
     try:
         pb = subprocess.Popen(clip_copy_exe,
-                              stdin=subprocess.PIPE, 
-                              stdout=open("/dev/null", "w"), 
+                              stdin=subprocess.PIPE,
+                              stdout=open("/dev/null", "w"),
                               stderr=open("/dev/null", "w"))
         pb.communicate(generated)
         pb.wait()
