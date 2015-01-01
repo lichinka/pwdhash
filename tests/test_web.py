@@ -1,8 +1,8 @@
 import cherrypy
 from cherrypy.test import helper
 
-from pwdhash import PwdHashGenerator
 from pwdhash.web import PwdHashServer
+from pwdhash.generator import PwdHashGenerator
 
 
 
@@ -24,6 +24,7 @@ class PwdHashServerTest (helper.CPWebCase):
     # this method creates the testing environment
     #
     setup_server = staticmethod (setup_server)
+
 
     def test_index (self):
         """

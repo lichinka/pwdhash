@@ -33,20 +33,21 @@ class PwdHashServer (object):
     def index (self):
         """
         The 'index.html' page.-
-        """
         from jinja2 import Environment, PackageLoader
 
         #
         # initialize the template renderer environment
         #
-        jinja_env = Environment (loader=PackageLoader ('pwdhash',
+        jinja_env = Environment (loader=PackageLoader (current_dir,
                                                        'templates'))
         index_template = jinja_env.get_template ("index.html")
 
         return index_template.render ( )
+        """
+        return 'ok!'
 
 
-    @cherrypy.expose 
+    @cherrypy.expose
     def generate (self, *args, **kwargs):
         """
         This target generates a PwdHash password.-
@@ -74,8 +75,8 @@ class PwdHashServer (object):
 
         try:
             pb = subprocess.Popen(clip_copy_exe,
-                                  stdin=subprocess.PIPE, 
-                                  stdout=open("/dev/null", "w"), 
+                                  stdin=subprocess.PIPE,
+                                  stdout=open("/dev/null", "w"),
                                   stderr=open("/dev/null", "w"))
             pb.communicate(generated)
             pb.wait()
