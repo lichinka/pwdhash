@@ -19,6 +19,7 @@ class HmacMd5 (object):
             integer += 0xFFFFFFFF + 1
         return integer
 
+
     @staticmethod
     def _safe_add (x, y):
         """
@@ -32,6 +33,7 @@ class HmacMd5 (object):
         #
         msw = HmacMd5._wrap_signed_int32 (msw << 16)
         return msw | (lsw & 0xFFFF)
+
 
     @staticmethod
     def _bit_rol (num, cnt):
@@ -57,9 +59,9 @@ class HmacMd5 (object):
         ret_val = HmacMd5._wrap_signed_int32 (ret_val)
         return ret_val
 
-    #
-    # these functions implement the four basic operations the algorithm uses
-    #
+    ##
+    ## these functions implement the four basic operations the algorithm uses
+    ##
     @staticmethod
     def _md5_cmn (q, a, b, x, s, t):
         return HmacMd5._safe_add (HmacMd5._bit_rol (HmacMd5._safe_add (
@@ -83,7 +85,7 @@ class HmacMd5 (object):
 
 
     @staticmethod
-    def core_md5 (lst, bit_count):
+    def _core_md5 (lst, bit_count):
         """
         Calculates the MD5 of list 'lst' containing little-endian words
         and a bit lenght of 'bit_count'.-
@@ -189,7 +191,7 @@ class HmacMd5 (object):
 
 
     @staticmethod
-    def str2binl (string, chrsz):
+    def _str2binl (string, chrsz):
         """
         Converts 'string' to a list of little-endian words.
         If 'chrsz' is 8 (ASCII), characters >255 have their hi-byte
@@ -213,20 +215,19 @@ class HmacMd5 (object):
 
 
     @staticmethod
-    def core_hmac_md5 (key, data):
+    def _core_hmac_md5 (key, data):
         """
-        Calculates the HMAC-MD5, of a key and some data.-
+        Calculates the HMAC-MD5 of a key and some data.-
         """
         #
         # bits per input character: 8 - ASCII; 16 - Unicode
         #
         chrsz = 8
 
-        bkey = HmacMd5.str2binl (key, chrsz)
+        bkey = HmacMd5._str2binl (key, chrsz)
         if len(bkey) > 16:
-            bkey = HmacMd5.core_md5 (bkey,
+            bkey = HmacMd5._core_md5 (bkey,
                                      len(key) * chrsz)
-
         ipad = [0] * 16
         opad = [0] * 16
         for i in range (len(bkey)):
@@ -237,11 +238,37 @@ class HmacMd5 (object):
             ipad[i] = 0x36363636
             opad[i] = 0x5C5C5C5C
 
-        ipad += HmacMd5.str2binl (data, chrsz)
-        my_hash = HmacMd5.core_md5 (ipad,
-                                    512 + len(data) * chrsz)
+        ipad += HmacMd5._str2binl (data, chrsz)
+        my_hash = HmacMd5._core_md5 (ipad,
+                                     512 + len(data) * chrsz)
         opad += my_hash
 
-        return HmacMd5.core_md5 (opad,
-                                 512 + 128)
+        return HmacMd5._core_md5 (opad,
+                                  512 + 128)
+
+
+    @staticmethod
+    def _binl2b64 (lst):
+        """
+        Convert a list of little-endian words ('lst') to a base-64 string.-
+        """
+        b64pad  = ""
+        tab     = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+        ret_val = ""
+
+        for i in range (0, len (lst) * 4, 3):
+            triplet = ( (((lst[i   >> 2] >> 8 * ( i   %4)) & 0xFF) << 16)
+                    |   (((lst[i+1 >> 2] >> 8 * ((i+1)%4)) & 0xFF) << 8 )
+                    |    ((lst[i+2 >> 2] >> 8 * ((i+2)%4)) & 0xFF) )
+            for j in range (4):
+                if (i * 8 + j * 6 > len (lst) * 32):
+                    ret_val += b64pad
+                else:
+                    ret_val += tab[(triplet >> 6*(3-j)) & 0x3F]
+        return ret_val
+
+
+    @staticmethod
+    def b64_hmac_md5 (key, data):
+        return HmacMd5._binl2b64 (HmacMd5._core_hmac_md5 (key, data))
 

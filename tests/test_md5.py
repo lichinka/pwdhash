@@ -69,7 +69,7 @@ class HmacMd5Test (unittest.TestCase):
     def test_str2binl (self):
         string   = "pepe"
         expected = [1701864816]
-        self.assertEqual (HmacMd5.str2binl (string, 8),
+        self.assertEqual (HmacMd5._str2binl (string, 8),
                           expected)
 
     def test_core_md5 (self):
@@ -97,8 +97,8 @@ class HmacMd5Test (unittest.TestCase):
                      1347505609,
                     -2070658591,
                       639279188]
-        result = HmacMd5.core_md5 (lst,
-                                   512 + 10 * chrsz)
+        result = HmacMd5._core_md5 (lst,
+                                    512 + 10 * chrsz)
         self.assertEqual (result,
                           expected)
 
@@ -120,6 +120,6 @@ class HmacMd5Test (unittest.TestCase):
                          -927036398])
 
         for i in range (len (params)):
-            self.assertEqual (HmacMd5.core_hmac_md5 (*params[i]),
+            self.assertEqual (HmacMd5._core_hmac_md5 (*params[i]),
                               expected[i])
 
