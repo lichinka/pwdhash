@@ -14,8 +14,8 @@ class HmacMd5Test (unittest.TestCase):
                     [-1526234400, -1971324652]]
         expected = [-1495716290,
                       797408244]
-        for i in range (len (params)):
-            self.assertEqual (HmacMd5._safe_add (*params[i]),
+        for i, p in enumerate (params):
+            self.assertEqual (HmacMd5._safe_add (*p),
                               expected[i])
 
     def test_bit_rol (self):
@@ -25,10 +25,9 @@ class HmacMd5Test (unittest.TestCase):
         expected = [ 1484512917,
                     -1039228798,
                       506577342]
-        for i in range (len (params)):
-            self.assertEqual (HmacMd5._bit_rol (*params[i]),
-                            expected[i])
-
+        for i, p in enumerate (params):
+            self.assertEqual (HmacMd5._bit_rol (*p),
+                              expected[i])
 
     def test_md5_ff (self):
         params   = [ ]
@@ -61,10 +60,9 @@ class HmacMd5Test (unittest.TestCase):
                           606105819])
         expected.append (680127582)
 
-        for i in range (len (params)):
-            self.assertEqual (HmacMd5._md5_ff (*params[i]),
+        for i, p in enumerate (params):
+            self.assertEqual (HmacMd5._md5_ff (*p),
                               expected[i])
-
 
     def test_str2binl (self):
         string   = "pepe"
@@ -102,7 +100,6 @@ class HmacMd5Test (unittest.TestCase):
         self.assertEqual (result,
                           expected)
 
-
     def test_core_hmac_md5 (self):
         params   = []
         expected = []
@@ -113,13 +110,23 @@ class HmacMd5Test (unittest.TestCase):
                            2092528897,
                           -2140662759])
 
-        params.append  (["pepe", "google.com"])
+        params.append  ([u"pepe", "google.com"])
         expected.append ([233115305,
                            81019179,
                          -227315827,
                          -927036398])
 
-        for i in range (len (params)):
-            self.assertEqual (HmacMd5._core_hmac_md5 (*params[i]),
+        for i, p in enumerate (params):
+            self.assertEqual (HmacMd5._core_hmac_md5 (*p),
                               expected[i])
 
+    def test_binl2b64 (self):
+        params   = []
+        expected = []
+
+        params.append ([ [-379130694, 866638437, 433126637, 553295998] ])
+        expected.append ('uuxm6WXapzPt/NAZfqD6IA')
+
+        for i, p in enumerate (params):
+            self.assertEqual (HmacMd5._binl2b64 (*p),
+                              expected[i])
