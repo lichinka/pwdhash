@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import getpass
 
@@ -19,7 +20,8 @@ if __name__ == '__main__':
     #
     # ask the user's master password in order to create a generator
     #
-    password = getpass.getpass (">>> Please enter your password <<<\n")
+    password = unicode (getpass.getpass (">>> Please enter your password <<<\n"),
+                        'utf8')
     generator = PwdHashGenerator (password)
     del password
 
@@ -32,7 +34,8 @@ if __name__ == '__main__':
         #
         if sys.argv[1] == '-web':
             from pwdhash import web
-            web.start (generator)
+            
+            web.start_server (generator)
         else:
             print_usage ( )
             sys.exit (1)
@@ -41,5 +44,5 @@ if __name__ == '__main__':
         # start the default console interface
         #
         from pwdhash import console
-        console.console_main (generator)
 
+        console.console_main (generator)
