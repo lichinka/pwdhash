@@ -257,9 +257,17 @@ class HmacMd5 (object):
         ret_val = ""
 
         for i in range (0, len (lst) * 4, 3):
-            triplet = ( (((lst[i   >> 2] >> 8 * ( i   %4)) & 0xFF) << 16)
-                    |   (((lst[i+1 >> 2] >> 8 * ((i+1)%4)) & 0xFF) << 8 )
-                    |    ((lst[i+2 >> 2] >> 8 * ((i+2)%4)) & 0xFF) )
+            triplet = ((lst[i   >> 2] >> 8 * ( i   %4)) & 0xFF) << 16
+            try:
+                triplet |= ((lst[i+1 >> 2] >> 8 * ((i+1)%4)) & 0xFF) << 8
+                triplet |= ((lst[i+2 >> 2] >> 8 * ((i+2)%4)) & 0xFF)
+
+            except IndexError:
+                #
+                # if the last two elements are missing, keep just the first one
+                #
+                pass
+
             for j in range (4):
                 if (i * 8 + j * 6 > len (lst) * 32):
                     ret_val += b64pad
