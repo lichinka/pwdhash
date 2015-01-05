@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 import cherrypy
@@ -16,8 +17,19 @@ class PwdHashServer (object):
         """
         Returns the comnfiguration dictionary for this webb app.-
         """
-        return {'tools.staticdir.on'  : True,
-                'tools.staticdir.dir' : '%s/%s' % (current_dir, "static")}
+        return {'tools.secureheaders.on' : True,
+                'tools.staticdir.on'     : True,
+                'tools.staticdir.dir'    : '%s/%s' % (current_dir, "static")}
+
+
+    def _secure_headers (self):
+        """
+        These settings provide enhanced security to the served pages.-
+        """
+        headers = cherrypy.response.headers
+        headers['X-Frame-Options'] = 'DENY'
+        headers['X-XSS-Protection'] = '1; mode=block'
+        headers['Content-Security-Policy'] = "default-src='self'"
 
 
     def __init__ (self, pwd_gen):
@@ -26,25 +38,34 @@ class PwdHashServer (object):
 
         pwd_gen     the PwdHash generator instance this web app uses.-
         """
+        from jinja2 import Environment, PackageLoader
+
         self.pwd_gen = pwd_gen
+        #
+        # template-rendering environment
+        #
+        self.jinja_env = Environment (loader=PackageLoader ('pwdhash',
+                                                            'templates'))
+        #
+        # set the security settings on the 'before_finalize' hook point
+        #
+        cherrypy.tools.secureheaders = cherrypy.Tool ('before_finalize',
+                                                      self._secure_headers,
+                                                      priority=60)
+        #
+        # turn off logging to standard output
+        #
+        cherrypy.log.screen = None
 
 
     @cherrypy.expose
     def index (self):
         """
         The 'index.html' page.-
-        from jinja2 import Environment, PackageLoader
-
-        #
-        # initialize the template renderer environment
-        #
-        jinja_env = Environment (loader=PackageLoader (current_dir,
-                                                       'templates'))
-        index_template = jinja_env.get_template ("index.html")
+        """
+        index_template = self.jinja_env.get_template ("index.html")
 
         return index_template.render ( )
-        """
-        return 'ok!'
 
 
     @cherrypy.expose
@@ -96,12 +117,14 @@ class PwdHashServer (object):
 
 
 
-def start (pwd_gen):
+def start_server (pwd_gen):
     """
-    Start the web server and opens the browser on its index page:
+    Starts the web server and opens the browser on the index page:
 
     pwd_gen     the PwdHash generator the web app will use.-
     """
+    print ("Starting PwdHash server at %s:%s ..." % (cherrypy.server.socket_host,
+                                                     cherrypy.server.socket_port))
     app = PwdHashServer (pwd_gen)
     cherrypy.quickstart (app,
                          '/',
