@@ -1,3 +1,76 @@
-body {
-    background-color: #f2f2f2;
+
+/* define a style for Title, Headings and Normal texts */
+.title,
+.heading1,
+.heading2,
+.heading3,
+.normal {
+  color: black;
+  margin: 0;
+  display: inline-block;
+  font-family: verdana, arial;
+  font-weight: normal;
+}
+.body{
+	cursor: auto; 
+    margin: 0 auto;
+    width: 980px;
+    height: 1200px;
+}
+.title {
+  font-size: 60px;
+  color: rgb(111, 168, 220);
+}
+.heading1 {
+  font-size: 24px;
+}
+.full-width {
+    width: 100% !important;
+}
+.grey-text .normal{
+    color: grey;
+}
+.small-text .normal{
+    color: grey;
+    font-size: 10px;
+}
+.product-details .heading1 {
+  color: rgb(111, 168, 220);
+}
+.product-details .heading3 {
+  color: white;
+  background-color: rgb(111, 168, 220);
+  float: right;
+  padding: 2px 25px;
+}
+/* animated colors widget
+    https://github.com/silexlabs/Silex/issues/138
+*/
+.link-menu .page-link-active {
+    background-color: rgb(111, 168, 220) !important;
+    /* Firefox */
+    -moz-transition: all 0.5s ease-in;
+    /* WebKit */
+    -webkit-transition: all 0.5s ease-in;
+    /* Opera */
+    -o-transition: all 0.5s ease-in;
+    /* Standard */
+    transition: all 0.5s ease-in;
+}
+.link-menu .page-link-active .normal {
+    color: #FFFFFF !important;
+    /* Firefox */
+    -moz-transition: all 0.5s ease-in;
+    /* WebKit */
+    -webkit-transition: all 0.5s ease-in;
+    /* Opera */
+    -o-transition: all 0.5s ease-in;
+    /* Standard */
+    transition: all 0.5s ease-in;
+}
+
+.footer {
+    font-family: verdana, arial;
+    font-weight: normal;
+    font-size: 50%;
 }
