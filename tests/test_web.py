@@ -33,5 +33,28 @@ class PwdHashServerTest (helper.CPWebCase):
         self.getPage ('/')
         self.assertStatus ('200 OK')
         self.assertHeader ('Content-Type', 'text/html;charset=utf-8')
-        self.assertInBody ('PwdHash')
+        self.assertInBody ('PwdHash Vault')
+        self.assertInBody ('ABOUT')
+
+
+    def test_about (self):
+        """
+        Checks the 'About' page is correctly served.-
+        """
+        self.getPage ('/about')
+        self.assertStatus ('200 OK')
+        self.assertHeader ('Content-Type', 'text/html;charset=utf-8')
+        self.assertInBody ('theft-resistant')
+        self.assertInBody ('HOME')
+
+
+    def test_add (self):
+        """
+        Checks the 'Add' page is correctly served.-
+        """
+        self.getPage ('/add')
+        self.assertStatus ('200 OK')
+        self.assertHeader ('Content-Type', 'text/html;charset=utf-8')
+        self.assertInBody ('Site Address')
+        self.assertInBody ('Add key')
 
