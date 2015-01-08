@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block link_menu %}
+    <a href="/#" class="link-menu">HOME</a>
+{% endblock %}
+
+{% block description %}
+    PwdHash generates theft-resistant passwords. The PwdHash Vault generates these passwords when running in your computer. You can start the Vault at any time by starting the daemon with your master password.
+If you don't want or can't install the PwdHash Vault, you can generate the passwords using several browser extensions:
+{% endblock %}
+
+{% block buttons %}
+    <div class="normal" align="center" style="width: 20%;">
+        <p>Firefox</p>
+        <a href="https://addons.mozilla.org/en-US/firefox/addon/pwdhash/">
+            <img src="img/firefox.png"></img>
+        </a>
+    </div>
+    <div class="normal" style="width: 20%;">
+    </div>
+    <div class="normal" align="center" style="width: 20%;">
+        <p>Chrome</p>
+        <a href="https://chrome.google.com/extensions/detail/dnfmcfhnhnpoehjoommondmlmhdoonca">
+            <img src="img/chrome.png"></img>
+        </a>
+    </div>
+    <div class="normal" style="width: 20%;">
+    </div>
+    <div class="normal" align="center">
+        <p>Opera</p>
+        <a href="https://chrome.google.com/extensions/detail/http://www.coredump.gr/pwdhash-for-opera/">
+            <img src="img/opera.png"></img>
+        </a>
+    </div>
+{% endblock %}

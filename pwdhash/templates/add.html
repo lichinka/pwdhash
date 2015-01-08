@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block link_menu %}
+    <a href="about" class="link-menu">ABOUT</a>
+{% endblock %}
+
+{% block description %}
+{% endblock %}
+
+{% block buttons %}
+<form id="hashform" action="update" method="POST">
+    <div class="normal full-width">
+        <hr/>
+        <h2 align="center">Add a new key to the Vault</h2>
+        <hr/>
+    </div>
+    <div class="normal full-width">
+        <div class="normal" style="width:35%;">
+            <h3 align="right">Name</h3>
+        </div>
+        <div class="normal" style="width:15%;">
+        </div>
+        <div class="normal" style="width:40%;">
+            <input value="example" name="name" type="text" style="width:80%;">
+        </div>
+    </div>
+    <div class="normal full-width">
+        <div class="normal" style="width:35%;">
+            <h3 align="right">Site Address</h3>
+        </div>
+        <div class="normal" style="width:15%;">
+        </div>
+        <div class="normal" style="width:40%;">
+            <input name="domain" type="text" style="width:80%;">
+        </div>
+    </div>
+    <div class="normal full-width">
+        <div class="normal" style="width:35%;">
+            <h3 align="right">Image URL</h3>
+        </div>
+        <div class="normal" style="width:15%;">
+        </div>
+        <div class="normal" style="width:40%;">
+            <input name="image" type="text" style="width:80%;">
+        </div>
+    </div>
+    <div class="normal full-width" align="center" style="padding:4em 0 0 0;">
+        <div class="normal" style="width:30%">
+            <a class="btn off" href="/#">Cancel</a>
+        </div>
+        <div class="normal" style="width:30%">
+            <a class="btn" href="#" onclick="hashform.submit ( ); return false">Add key</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

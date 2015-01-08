@@ -3,6 +3,8 @@ import os
 import sys
 import cherrypy
 
+from pwdhash.db import KeyDatabase, Key
+
 
 
 current_dir = os.path.dirname (os.path.abspath (__file__))
@@ -15,9 +17,17 @@ class PwdHashServer (object):
     """
     def _get_config (self):
         """
-        Returns the comnfiguration dictionary for this webb app.-
+        Returns the configuration dictionary for this webb app.-
         """
-        return {'tools.secureheaders.on' : True,
+        #
+        # start the server with only two threads
+        #
+        cherrypy.config.update ({'server.thread_pool': 2})
+        #
+        # site-specific configuration
+        #
+        return {'tools.encode.encoding'  : 'utf-8',
+                'tools.secureheaders.on' : True,
                 'tools.staticdir.on'     : True,
                 'tools.staticdir.dir'    : '%s/%s' % (current_dir, "static")}
 
@@ -56,16 +66,29 @@ class PwdHashServer (object):
         # turn off logging to standard output
         #
         cherrypy.log.screen = None
+       
+        #
+        # initialize the database
+        #
+        self.db = KeyDatabase (current_dir)
 
 
     @cherrypy.expose
-    def index (self):
+    def about (self):
         """
-        The 'index.html' page.-
+        The 'about' page.-
         """
-        index_template = self.jinja_env.get_template ("index.html")
+        tmpl = self.jinja_env.get_template ("about.html")
+        return tmpl.render ( )
 
-        return index_template.render ( )
+
+    @cherrypy.expose
+    def add (self):
+        """
+        This page allows to save a new key.-
+        """
+        tmpl = self.jinja_env.get_template ("add.html")
+        return tmpl.render ( )
 
 
     @cherrypy.expose
@@ -114,8 +137,39 @@ class PwdHashServer (object):
             return generated
 
 
+    @cherrypy.expose
+    def index (self):
+        """
+        The 'index' page.-
+        """
+        keys = Key.select ( )
+        tmpl = self.jinja_env.get_template ("index.html")
+        return tmpl.render (keys=keys)
 
 
+    @cherrypy.expose
+    def update (self, name=None, domain=None, image=None):
+        """
+        Updates a key in the vault.-
+        """
+        from sqlobject import SQLObjectNotFound
+
+        if name:
+            #
+            # if the entry already exists, we will update it
+            #
+            try:
+                k = Key.byName (name)
+            except SQLObjectNotFound:
+                k = Key (name=name,
+                         domain=domain,
+                         image=image)
+            #
+            # update the rest of the fields
+            #
+            k.domain = domain
+            k.image  = image
+        raise cherrypy.HTTPRedirect ("/")
 
 def start_server (pwd_gen):
     """
