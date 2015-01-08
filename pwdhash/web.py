@@ -127,24 +127,27 @@ class PwdHashServer (object):
             if pb.returncode == 0:
                 copied_to_clipboard = True
             else:
-                return ("Install '%s' for clipboard support\n" % clip_copy_exe)
+                generated = "Install '%s' for clipboard support\n-- %s --" % (clip_copy_exe,
+                                                                    generated)
         except:
             pass
 
         if copied_to_clipboard:
-            return "<h2>Password copied to clipboard</h2>"
+            msg = "Password available"
         else:
-            return generated
+            msg = generated
+        raise cherrypy.HTTPRedirect ("/?msg=%s" % msg)
 
 
     @cherrypy.expose
-    def index (self):
+    def index (self, msg=None):
         """
         The 'index' page.-
         """
-        keys = Key.select ( )
+        keys = Key.select ( ).orderBy ('name')
         tmpl = self.jinja_env.get_template ("index.html")
-        return tmpl.render (keys=keys)
+        return tmpl.render (keys=keys,
+                            msg=msg)
 
 
     @cherrypy.expose
@@ -170,6 +173,8 @@ class PwdHashServer (object):
             k.domain = domain
             k.image  = image
         raise cherrypy.HTTPRedirect ("/")
+
+
 
 def start_server (pwd_gen):
     """
