@@ -32,13 +32,3 @@
 </form>
 {% endblock %}
 
-{% block display %}
-{% if msg %}
-    <dialog class="modal">
-        <form id="dialog_form" action="/">
-            <p>{{ msg }}</p>
-            <input type="submit" value="Close" align="center">
-        </form>
-    </dialog>
-{% endif %}
-{% endblock %}

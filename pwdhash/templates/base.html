@@ -6,9 +6,7 @@
     {% endif %}
     <title>PwdHash Vault</title>
     <script src="js/ajax.js" type="text/javascript"></script>
-    <script src="js/dialog-polyfill.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="stylesheet" type="text/css" href="dialog-polyfill.css">
     <link rel="shortcut icon" href="https://www.pwdhash.com/favicon.ico">
 </head>
 
@@ -42,9 +40,15 @@
     {% endblock %}
 </div>
 
-{% block display %}
-{% endblock %}
-
+{% if msg %}
+    <div id="shade"></div>               
+    <div id="modal" align="center">
+        <form id="dialog_form" action="/">
+            <p>{{ msg }}</p>
+            <input id="close_dialog" type="submit" value="Close">
+        </form>
+    </div>
+{% endif %}
 </div>
 
 <div class="footer" align="center">
