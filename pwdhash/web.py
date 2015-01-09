@@ -97,21 +97,17 @@ class PwdHashServer (object):
         """
         This target generates a PwdHash password.-
         """
-        import subprocess
-
         domain = kwargs['domain']
         generated = self.pwd_gen.generate (domain)
 
-        #
-        # an external program is used for copying the password to the clipboard
-        #
         copied_to_clipboard = copy_to_clipboard (generated) 
 
         if copied_to_clipboard:
             msg = "Password ready"
         else:
             msg = generated
-        raise cherrypy.HTTPRedirect ("/?msg=%s" % msg)
+        del generated
+        return self.index (msg)
 
 
     @cherrypy.expose
