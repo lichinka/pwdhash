@@ -119,7 +119,18 @@ class PwdHashServer (object):
         """
         The 'index' page.-
         """
+        #
+        # clean the clipboard if there is no 'msg'
+        #
+        if msg is None:
+            copy_to_clipboard ("***")
+        #
+        # get a list of all the available keys
+        #
         keys = Key.select ( ).orderBy ('name')
+        #
+        # render the template
+        #
         tmpl = self.jinja_env.get_template ("index.html")
         return tmpl.render (keys=keys,
                             msg=msg)
