@@ -75,6 +75,7 @@
     font-size: 50%;
 }
 
+/* button styles follow */
 .btn {
   background: #6fa8dc;
   background-image: -webkit-linear-gradient(top, #6fa8dc, #2980b9);
@@ -86,7 +87,6 @@
   -moz-border-radius: 28;
   border-radius: 28px;
   text-shadow: 1px 1px 3px #666666;
-  font-family: Arial;
   color: #ffffff;
   font-size: 20px;
   padding: 10px 20px 10px 20px;
@@ -103,9 +103,22 @@
   text-decoration: none;
 }
 
-.off {
-    background: #aaafb3;
+.neutral {
+    background: none;
+    color: #787878;
+    text-shadow: none;
+    border: #787878;
+    border-style: solid;
 }
+
+.negative {
+    background: none;
+    color: #ff2200;
+    text-shadow: none;
+    border: #ff2200;
+    border-style: solid;
+}
+
 
 /* semi-transparent overlay dialog */
 .modal{

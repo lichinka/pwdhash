@@ -151,13 +151,25 @@ class PwdHashServer (object):
 
 
     @cherrypy.expose
-    def update (self, name=None, domain=None, image=None):
+    def update (self, name=None, domain=None, image=None, delete=None):
         """
         Updates a key in the vault.-
         """
         from sqlobject import SQLObjectNotFound
 
-        if name:
+        #
+        # delete an entry?
+        #
+        if delete:
+            try:
+                k = Key.byName (delete)
+                Key.delete (k.id)
+            except SQLObjectNotFound:
+                pass
+        #
+        # add or update an entry?
+        #
+        elif name:
             #
             # if the entry already exists, we will update it
             #
@@ -172,6 +184,9 @@ class PwdHashServer (object):
             #
             k.domain = domain
             k.image  = image
+        #
+        # go back home
+        #
         raise cherrypy.HTTPRedirect ("/")
 
 
