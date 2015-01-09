@@ -58,27 +58,6 @@ class PwdHashGenerator (object):
         """
         return ((0x0000FFFF & num)<<16) + ((0xFFFF0000 & num)>>16)
 
-    """
-    def _b64_hmac_md5 (key, data):
-        ""
-        Returns a base64-encoded HMAC-MD5 for key and data, with the
-        trailing '=' stripped.-
-        ""
-        import unicodedata
-
-        #
-        # the HMAC object does not support Unicode data, so we have
-        # to normalize the string before hashing it
-        #
-        norm_key = unicodedata.normalize ('NFKD', key)
-        norm_key = norm_key.encode ('ascii', 'ignore')
-
-        bdigest = hmac.HMAC (norm_key, data).digest ( )
-        bdigest = bdigest.encode ('base64').strip ( )
-
-        return re.sub ('=+$', '', bdigest)
-    """
-
 
     def _extract_domain (self, uri):
         """
