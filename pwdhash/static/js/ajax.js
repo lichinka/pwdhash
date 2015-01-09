@@ -41,6 +41,10 @@ function displayDialog ( )
 {
     var modal= document.getElementById('modal');
     var shade= document.getElementById('shade');
+    
+    //
+    // if these elements do not exist, there is nothing to display
+    //
     if (modal != null && shade != null)
     {
         modal.style.display = 'block';

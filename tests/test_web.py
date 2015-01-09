@@ -56,5 +56,5 @@ class PwdHashServerTest (helper.CPWebCase):
         self.assertStatus ('200 OK')
         self.assertHeader ('Content-Type', 'text/html;charset=utf-8')
         self.assertInBody ('Site Address')
-        self.assertInBody ('Add key')
+        self.assertInBody ('Update')
 
