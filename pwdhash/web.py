@@ -4,6 +4,7 @@ import sys
 import cherrypy
 
 from pwdhash.db import KeyDatabase, Key
+from pwdhash.console import copy_to_clipboard
 
 
 
@@ -104,36 +105,10 @@ class PwdHashServer (object):
         #
         # an external program is used for copying the password to the clipboard
         #
-        copied_to_clipboard = False
-
-        if sys.platform == "darwin":
-            #
-            # on OSX
-            #
-            clip_copy_exe = "pbcopy"
-        elif 'DISPLAY' in os.environ:
-            #
-            # on Linux/Un*x
-            #
-            clip_copy_exe = "xclip"
-
-        try:
-            pb = subprocess.Popen(clip_copy_exe,
-                                  stdin=subprocess.PIPE,
-                                  stdout=open("/dev/null", "w"),
-                                  stderr=open("/dev/null", "w"))
-            pb.communicate(generated)
-            pb.wait()
-            if pb.returncode == 0:
-                copied_to_clipboard = True
-            else:
-                generated = "Install '%s' for clipboard support\n-- %s --" % (clip_copy_exe,
-                                                                    generated)
-        except:
-            pass
+        copied_to_clipboard = copy_to_clipboard (generated) 
 
         if copied_to_clipboard:
-            msg = "Password available"
+            msg = "Password ready"
         else:
             msg = generated
         raise cherrypy.HTTPRedirect ("/?msg=%s" % msg)

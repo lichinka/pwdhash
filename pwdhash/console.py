@@ -1,4 +1,7 @@
-import os, sys, subprocess
+import os
+import sys
+import logging
+import subprocess
 
 
 
@@ -14,7 +17,23 @@ def console_main (pwd_gen):
     #
     # an external program is used for copying the password to the clipboard
     #
-    copied_to_clipboard = False
+    copied_to_clipboard = copy_to_clipboard (generated) 
+
+    if copied_to_clipboard:
+        print "Password was copied to clipboard."
+    else:
+        print generated
+
+
+
+def copy_to_clipboard (string):
+    """
+    Returns 'True' if 'string' was correctly copied to the system's clipboard.-
+    """
+    #
+    # an external program is used for copying the password to the clipboard
+    #
+    is_copied = False
 
     if sys.platform == "darwin":
         #
@@ -32,17 +51,15 @@ def console_main (pwd_gen):
                               stdin=subprocess.PIPE,
                               stdout=open("/dev/null", "w"),
                               stderr=open("/dev/null", "w"))
-        pb.communicate(generated)
-        pb.wait()
+        pb.communicate (string)
+        pb.wait ( )
         if pb.returncode == 0:
-            copied_to_clipboard = True
+            is_copied = True
         else:
-            sys.stderr.write ("Install '%s' for clipboard support\n" % clip_copy_exe)
+            is_copied = False
+            logging.warning ("Install '%s' for clipboard support" % clip_copy_exe)
     except:
-        pass
+        is_copied = False
 
-    if copied_to_clipboard:
-        print "Password was copied to clipboard."
-    else:
-        print generated
+    return is_copied
 
