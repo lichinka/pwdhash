@@ -11,7 +11,7 @@
     <input type="hidden" id="domain" name="domain" value="None">
 
 {% for k in keys %}
-    <div class="normal" align="center" style="width:20%;">
+    <div class="normal" align="center" style="width:20%;vertical-align:top;">
         <p>{{ k.name }}</p>
         <a id="{{ k.domain }}" href="#" onclick="sendEntry (this);">
             {% if k.image -%}
