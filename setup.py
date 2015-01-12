@@ -39,10 +39,11 @@ setup (name='pwdhash',
        author_email='shamardin@gmail.com, lucas.benedicic@gmail.com',
        url='https://github.com/abbot/pwdhash',
        license='BSD',
+       py_modules=['main'],
        packages=['pwdhash'],
+       include_package_data=True,
        install_requires=['CherryPy', 'Jinja2', 'SQLObject', 'apsw', 'nose'],
+       entry_points={ 'console_scripts': [ 'pwdhash = main:main' ] },
        zip_safe=False,
-       package_data={'': ['README.md']},
-       entry_points={ 'console_scripts': [ 'pwdhash = main' ] },
       )
       
