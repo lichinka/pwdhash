@@ -6,6 +6,21 @@ from pwdhash.generator import PwdHashGenerator
 
 
 
+def create_generator ( ):
+    """
+    Returns an instantiated PwdHashGenerator object with the
+    user's master password.-
+    """
+    #
+    # ask the user's master password in order to create a generator
+    #
+    password = unicode (getpass.getpass (">>> Please enter your password <<<\n"),
+                        'utf8')
+    generator = PwdHashGenerator (password)
+    del password
+    return generator
+
+
 def print_usage ( ):
     """
     Prints out usage message.-
@@ -31,27 +46,41 @@ def main ( ):
         #
         if sys.argv[1] == '-i':
             from pwdhash import console
-            start_obj = console
+
+            generator = create_generator ( )
+            console.go (generator)
         else:
             print_usage ( )
             sys.exit (1)
     else:
         #
-        # start the web interface by default
+        # start the web interface in a separate process
         #
+        import logging
+        import subprocess
+        from multiprocessing import Process
         from pwdhash import web
-        start_obj = web
-    #
-    # ask the user's master password in order to create a generator
-    #
-    password = unicode (getpass.getpass (">>> Please enter your password <<<\n"),
-                        'utf8')
-    generator = PwdHashGenerator (password)
-    del password
-    #
-    # start the selected interface
-    #
-    start_obj.go (generator)
+
+        generator = create_generator ( )
+        p = Process (target=web.go, args=(generator,))
+        p.start ( )
+
+        #
+        # display the Vault's home page in a browser
+        # FIXME make this cross platform, e.g., like the clipboard support
+        #
+        vault_home = 'http://%s:%s' % (web.PwdHashServer._global_config['server.socket_host'],
+                                       web.PwdHashServer._global_config['server.socket_port'])
+        pb = subprocess.Popen (['xdg-open', vault_home],
+                               stdout=open("/dev/null", "w"),
+                               stderr=open("/dev/null", "w"))
+        pb.wait ( )
+        if pb.returncode != 0:
+            logging.warning ("Could not open PwdHash Vault's home page")
+        #
+        # the Vault's process
+        #
+        p.join ( )
 
 
 

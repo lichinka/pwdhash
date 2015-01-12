@@ -14,23 +14,21 @@ current_dir = os.path.dirname (os.path.abspath (__file__))
 
 class PwdHashServer (object):
     """
-    A small web server for the PwdHash web interface.-
+    A small server for the PwdHash Vault web interface.-
     """
-    def _get_config (self):
-        """
-        Returns the configuration dictionary for this webb app.-
-        """
-        #
-        # start the server with only two threads
-        #
-        cherrypy.config.update ({'server.thread_pool': 2})
-        #
-        # site-specific configuration
-        #
-        return {'tools.encode.encoding'  : 'utf-8',
-                'tools.secureheaders.on' : True,
-                'tools.staticdir.on'     : True,
-                'tools.staticdir.dir'    : '%s/%s' % (current_dir, "static")}
+    #
+    # configuration settings for this server
+    #
+    _global_config = {'server.socket_host' : '127.0.0.1',
+                      'server.socket_port' : 8080,
+                      'server.thread_pool' : 2}
+    #
+    # site-specific configuration
+    #
+    _site_config = {'tools.encode.encoding'  : 'utf-8',
+                    'tools.secureheaders.on' : True,
+                    'tools.staticdir.on'     : True,
+                    'tools.staticdir.dir'    : '%s/%s' % (current_dir, "static")}
 
 
     def _secure_headers (self):
@@ -182,7 +180,8 @@ def go (pwd_gen):
     print ("Starting PwdHash Vault at %s:%s ..." % (cherrypy.server.socket_host,
                                                     cherrypy.server.socket_port))
     app = PwdHashServer (pwd_gen)
-    cherrypy.quickstart (app,
-                         '/',
-                         {'/' : app._get_config ( )})
+    cherrypy.config.update (PwdHashServer._global_config)
+    cherrypy.quickstart    (app,
+                            '/',
+                            {'/' : PwdHashServer._site_config})
 
