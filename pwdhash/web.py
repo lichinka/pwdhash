@@ -173,14 +173,14 @@ class PwdHashServer (object):
 
 
 
-def start_server (pwd_gen):
+def go (pwd_gen):
     """
-    Starts the web server and opens the browser on the index page:
+    Starts the web-server vault:
 
     pwd_gen     the PwdHash generator the web app will use.-
     """
-    print ("Starting PwdHash server at %s:%s ..." % (cherrypy.server.socket_host,
-                                                     cherrypy.server.socket_port))
+    print ("Starting PwdHash Vault at %s:%s ..." % (cherrypy.server.socket_host,
+                                                    cherrypy.server.socket_port))
     app = PwdHashServer (pwd_gen)
     cherrypy.quickstart (app,
                          '/',

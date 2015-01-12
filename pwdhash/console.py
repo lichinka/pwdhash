@@ -5,7 +5,7 @@ import subprocess
 
 
 
-def console_main (pwd_gen):
+def go (pwd_gen):
     """
     A console interface for PwdHash:
 
@@ -20,7 +20,7 @@ def console_main (pwd_gen):
     copied_to_clipboard = copy_to_clipboard (generated) 
 
     if copied_to_clipboard:
-        print "Password was copied to clipboard."
+        print "Password copied to clipboard."
     else:
         print generated
 
