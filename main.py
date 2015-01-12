@@ -30,7 +30,7 @@ if __name__ == '__main__':
     #
     if len (sys.argv) > 1:
         #
-        # start the web server
+        # start the web interface
         #
         if sys.argv[1] == '-web':
             from pwdhash import web
@@ -41,7 +41,7 @@ if __name__ == '__main__':
             sys.exit (1)
     else:
         #
-        # start the default console interface
+        # start the console interface
         #
         from pwdhash import console
 

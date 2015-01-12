@@ -1,33 +1,48 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+import os
 from setuptools import setup, find_packages
 
-version = '0.1.1'
 
-setup(name='pwdhash.py',
-      version=version,
-      description='Python Stanford PwdHash implementation',
-      long_description="""\
-Implementation of theft-resistant password generation algorithm known as
-Stanford PwdHash (https://www.pwdhash.com/)""",
-      classifiers=['Development Status :: 5 - Production/Stable',
-                   'Environment :: Console',
-                   'Environment :: X11 Applications',
-                   'Environment :: MacOS X',
-                   'License :: OSI Approved :: BSD License',
-                   'Operating System :: OS Independent',
-                   'Programming Language :: Python',
-                   'Topic :: Internet',
-                   'Topic :: Software Development :: Libraries :: Python Modules',
-                   'Topic :: Utilities'],
-      keywords='pwdhash',
-      author='Lev Shamardin',
-      author_email='shamardin@gmail.com',
-      url='https://github.com/abbot/pwdhash',
-      license='BSD',
-      py_modules=['pwdhash'],
-      zip_safe=False,
-      entry_points={ 'console_scripts': [ 'pwdhash = pwdhash:console_main' ] },
+
+version = '0.2.0'
+
+
+def read (fname):
+    """
+    Utility function to read the README file; used for the long_description.-
+    """
+    return open (os.path.join (os.path.dirname (__file__), fname)).read ( )
+
+
+setup (name='pwdhash',
+       version=version,
+       description="An implementation of Stanford's PwdHash",
+       long_description=read ('README.md'),
+       classifiers=['Development Status :: 5 - Production/Stable',
+                    'Environment :: Console',
+                    'Environment :: Web Environment',
+                    'Environment :: X11 Applications',
+                    'Environment :: MacOS X',
+                    'License :: OSI Approved :: BSD License',
+                    'Operating System :: OS Independent',
+                    'Programming Language :: Python',
+                    'Topic :: Internet',
+                    'Topic :: Software Development :: Libraries :: Python Modules',
+                    'Topic :: Utilities',
+                    'Programming Language :: Python :: 2',
+                    'Programming Language :: Python :: 2.6',
+                    'Programming Language :: Python :: 2.7',],
+       keywords='local pwdhash vault',
+       author='Lev Shamardin, Lucas Benedicic',
+       author_email='shamardin@gmail.com, lucas.benedicic@gmail.com',
+       url='https://github.com/abbot/pwdhash',
+       license='BSD',
+       packages=['pwdhash'],
+       install_requires=['CherryPy', 'Jinja2', 'SQLObject', 'apsw', 'nose'],
+       zip_safe=False,
+       package_data={'': ['README.md']},
+       entry_points={ 'console_scripts': [ 'pwdhash = main' ] },
       )
       

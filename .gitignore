@@ -1,3 +1,5 @@
-*.swp
 venv2
+dist
+pwdhash.egg-info
+*.swp
 .ropeproject
