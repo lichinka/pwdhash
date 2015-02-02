@@ -58,11 +58,11 @@ def main ( ):
         # start the web interface in a separate process
         #
         from multiprocessing import Process
-	from pwdhash.web import PwdHashServer
+	from pwdhash.web import go, PwdHashServer
         from pwdhash.platform import open_target
 
         generator = create_generator ( )
-        p = Process (target=web.go, args=(generator,))
+        p = Process (target=go, args=(generator,))
         p.start ( )
 
         #
