@@ -4,7 +4,7 @@ import sys
 import cherrypy
 
 from pwdhash.db import KeyDatabase, Key
-from pwdhash.console import copy_to_clipboard
+from pwdhash.platform import copy_to_clipboard
 
 
 
@@ -95,6 +95,8 @@ class PwdHashServer (object):
         """
         This target generates a PwdHash password.-
         """
+	from pwdhash.platform import copy_to_clipboard
+
         domain = kwargs['domain']
         generated = self.pwd_gen.generate (domain)
 
@@ -177,6 +179,14 @@ def go (pwd_gen):
 
     pwd_gen     the PwdHash generator the web app will use.-
     """
+    from cherrypy.process.plugins import Daemonizer
+
+    #
+    # start the vault as a daemon in the background
+    #
+    #d = Daemonizer (cherrypy.engine)
+    #d.subscribe ( )
+   
     print ("Starting PwdHash Vault at %s:%s ..." % (cherrypy.server.socket_host,
                                                     cherrypy.server.socket_port))
     app = PwdHashServer (pwd_gen)

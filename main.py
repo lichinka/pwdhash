@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 import sys
-import getpass
-
-from pwdhash.generator import PwdHashGenerator
 
 
 
@@ -11,6 +8,9 @@ def create_generator ( ):
     Returns an instantiated PwdHashGenerator object with the
     user's master password.-
     """
+    import getpass
+    from pwdhash.generator import PwdHashGenerator
+
     #
     # ask the user's master password in order to create a generator
     #
@@ -29,6 +29,7 @@ def print_usage ( ):
     print ("Implements Stanford's PwdHash with console and web interfaces.")
     print
     print ("-i    starts PwdHash in interactive mode.-")
+
 
 
 def main ( ):
@@ -56,10 +57,9 @@ def main ( ):
         #
         # start the web interface in a separate process
         #
-        import logging
-        import subprocess
         from multiprocessing import Process
-        from pwdhash import web
+	from pwdhash.web import PwdHashServer
+        from pwdhash.platform import open_target
 
         generator = create_generator ( )
         p = Process (target=web.go, args=(generator,))
@@ -67,16 +67,11 @@ def main ( ):
 
         #
         # display the Vault's home page in a browser
-        # FIXME make this cross platform, e.g., like the clipboard support
         #
-        vault_home = 'http://%s:%s' % (web.PwdHashServer._global_config['server.socket_host'],
-                                       web.PwdHashServer._global_config['server.socket_port'])
-        pb = subprocess.Popen (['xdg-open', vault_home],
-                               stdout=open("/dev/null", "w"),
-                               stderr=open("/dev/null", "w"))
-        pb.wait ( )
-        if pb.returncode != 0:
-            logging.warning ("Could not open PwdHash Vault's home page")
+        vault_home = 'http://%s:%s' % (PwdHashServer._global_config['server.socket_host'],
+                                       PwdHashServer._global_config['server.socket_port'])
+	open_target (vault_home)
+
         #
         # the Vault's process
         #
