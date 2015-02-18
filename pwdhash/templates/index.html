@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block description %}
-    These entries are currently available:
+    {% if keys.count < 1 %}
+    There are no entries currently available. Try 'UPDATE'.
+    {% endif %}
 {% endblock %}
 
 {% block buttons %}
