@@ -2,6 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 import os
+import subprocess
 from setuptools import setup, find_packages
 
 
@@ -14,6 +15,32 @@ def read (fname):
     Utility function to read the README file; used for the long_description.-
     """
     return open (os.path.join (os.path.dirname (__file__), fname)).read ( )
+
+
+def check_for_sqlite ( ):
+    """
+    Checks the availability of ``sqlite`` in the target system
+    and returns its version or None if it was not found.-
+    """
+    prg = 'sqlite3'
+    ret_value = None
+
+    try:
+        pb = subprocess.Popen ([prg, '--version'],
+                               stdout=subprocess.PIPE,
+                               stderr=open("/dev/null", "w"))
+        out, err = pb.communicate ( )
+    except OSError:
+        logging.error ("Please install '%s' or add it to your path" % prg)
+        ret_value = None
+    else:
+        if pb.returncode != 0:
+            logging.error ("Please install '%s' or add it to your path" % prg)
+            ret_value = None
+        else:
+            ret_value = out.split (' ')[0]
+    return ret_value
+
 
 
 setup (name='pwdhash',
@@ -42,7 +69,11 @@ setup (name='pwdhash',
        py_modules=['main'],
        packages=['pwdhash'],
        include_package_data=True,
-       install_requires=['CherryPy', 'Jinja2', 'SQLObject', 'apsw', 'nose'],
+       install_requires=['CherryPy', 
+                         'Jinja2', 
+                         'SQLObject', 
+                         'apsw<=%s' % check_for_sqlite ( ), 
+                         'nose'],
        entry_points={ 'console_scripts': [ 'pwdhash = main:main' ] },
        zip_safe=False,
       )
