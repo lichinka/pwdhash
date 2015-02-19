@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block description %}
+    <p>
+    {% if prev_start %}
+        <a href="pick_image?{{ query }}&start={{ prev_start }}"> <<<< </a>
+    {% endif %}
+    &nbsp&nbsp&nbsp&nbsp Pick an image for this entry &nbsp&nbsp&nbsp&nbsp
+    {% if next_start %}
+        <a href="pick_image?{{ query|e }}&start={{ next_start }}"> >>>> </a>
+    {% endif %}
+    </p>
+{% endblock %}
+
+{% block buttons %}
+<!-- Here we display the results of the Google images query --!>
+<form id="entries_form" action="generate" method="POST">
+
+{% for i in img_urls %}
+    <div class="normal" align="center" style="width:20%;vertical-align:top;">
+        <p>{{ i|truncate(20, True) }}</p>
+        <img src="{{ i }}" style="width:128px;"></img>
+    </div>
+    {% if loop.index % 3 != 0 %}
+        <div class="normal" style="width:5%;"></div>
+    {% endif %}
+{% endfor %}
+
+</form>
+
+{% endblock %}
+
