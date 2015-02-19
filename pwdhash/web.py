@@ -109,6 +109,74 @@ class PwdHashServer (object):
         del generated
         return self.index (msg)
 
+    @cherrypy.expose
+    def pick_image (self, query, start=0):
+        """
+        Displays images from a Google image search, letting the
+        user select one as the icon for a new entry:
+
+            query   the query string sent to Google images;
+            start   the query parameter for pagination.-
+        """
+        import json
+        import time
+        import urllib
+        import requests
+ 
+        BASE_URL    = 'https://ajax.googleapis.com/ajax/services/search/images'
+        BASE_URL   += '?v=1.0&q=%s' % query
+        BASE_URL   += '&start=%d'
+        MAX_RESULTS = 56
+
+        img_urls = list ( )
+
+        #
+        # display 8 images per page
+        #
+        start      = int (start)
+        next_start = start + 8 
+        prev_start = start - 8
+
+        #
+        # Google will only return a max of 56 results
+        # 
+        if next_start > MAX_RESULTS:
+            next_start = MAX_RESULTS
+        if prev_start < 0:
+            prev_start = None
+        while start < next_start:
+            r = requests.get (BASE_URL % start)
+            for image_info in json.loads (r.text)['responseData']['results']:
+                url = image_info['unescapedUrl']
+                try:
+                    image_r = requests.get (url)
+                    img_urls.append (url)
+                except requests.exceptions.ConnectionError, e:
+                    #
+                    # ignore images that are not accessible
+                    #
+                    pass
+            #
+            # we get delivered four images per page
+            #
+            start += 4
+             
+            # Be nice to Google and they'll be nice back :)
+            time.sleep (0.5)
+        #
+        # disable the link to the next page in case we are at the end
+        #
+        if next_start == MAX_RESULTS:
+            next_start = None
+        #
+        # render the template
+        #
+        tmpl = self.jinja_env.get_template ("pick_image.html")
+        return tmpl.render (query=urllib.urlencode ({'query': query}),
+                            img_urls=img_urls,
+                            next_start=next_start,
+                            prev_start=prev_start)
+     
 
     @cherrypy.expose
     def index (self, msg=None):

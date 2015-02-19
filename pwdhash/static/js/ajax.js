@@ -1,3 +1,49 @@
+
+
+
+/**
+ * Grabs the returned URL and pastes it in the target.
+ * Used in conjunction with 'selectImage (url);'.-
+ */
+function pasteURL ( )
+{
+    name_field = document.getElementById ("name");
+    //
+    // do not do anything if the 'name' field is still empty
+    //
+    name_value = name_field.value.trim ( );
+    if (name_value.length > 0)
+    {
+        query = name_value + " logo png";
+        window.open ("/pick_image?query=" + encodeURI (query),
+                     "image_url",
+                     "toolbar=no,menubar=no,scrollbars=yes");
+        //
+        // reset to default
+        //
+        name_field.style.backgroundColor = "";
+    }
+    else
+    {
+        //
+        // red background to mark the missing information
+        //
+        name_field.style.backgroundColor = "#FF0000";
+    }
+}
+
+
+/**
+ * Forwards the URL of the selected image.-
+ */
+function selectImage (url)
+{
+    window.opener.document.getElementById("image").value = url;
+    top.close ( );
+    return false;
+}
+
+
 /**
  * Deletes the selected entry from the vault.-
  */

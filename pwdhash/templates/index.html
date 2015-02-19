@@ -24,8 +24,9 @@
             </img>
         </a>
     </div>
-    <div class="normal" style="width:5%;">
-    </div>
+    {% if loop.index % 3 != 0 %}
+        <div class="normal" style="width:5%;"></div>
+    {% endif %}
 {% endfor %}
 </form>
 {% endblock %}
