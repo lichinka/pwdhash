@@ -1,5 +1,4 @@
 venv2
 dist
-pwdhash.egg-info
+pwdhash_vault.egg-info
 *.swp
-.ropeproject
