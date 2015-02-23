@@ -22,6 +22,6 @@ def go (pwd_gen):
     copied_to_clipboard = copy_to_clipboard (generated) 
 
     if copied_to_clipboard:
-        print "Password copied to clipboard."
+        print ("Password copied to clipboard.")
     else:
-        print generated
+        print (generated)

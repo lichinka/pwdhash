@@ -95,7 +95,7 @@ class PwdHashServer (object):
         """
         This target generates a PwdHash password.-
         """
-	from pwdhash.platform import copy_to_clipboard
+        from pwdhash.platform import copy_to_clipboard
 
         domain = kwargs['domain']
         generated = self.pwd_gen.generate (domain)
@@ -151,7 +151,7 @@ class PwdHashServer (object):
                 try:
                     image_r = requests.get (url)
                     img_urls.append (url)
-                except requests.exceptions.ConnectionError, e:
+                except requests.exceptions.ConnectionError:
                     #
                     # ignore images that are not accessible
                     #
